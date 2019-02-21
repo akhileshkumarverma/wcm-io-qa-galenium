@@ -17,34 +17,40 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.qa.galenium.maven.freemarker.pojo;
+package io.wcm.qa.galenium.selectors.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.openqa.selenium.By;
 
 import com.galenframework.specs.page.Locator;
 
+import io.wcm.qa.galenium.selectors.IndexedSelector;
 import io.wcm.qa.galenium.selectors.NestedSelector;
-import io.wcm.qa.galenium.selectors.Selector;
-import io.wcm.qa.galenium.selectors.util.SelectorFactory;
 
 /**
- * Wrapper for NestedSelector plus references to spec.
+ * Indexed selectors carry an index for each level to have a way to individually address multiple elements matching the
+ * same selector.
  */
-public class SelectorPojo implements NestedSelector {
+public class DelegatingIndexedSelector implements IndexedSelector {
 
   private NestedSelector delegatee;
-  private SpecPojo spec;
+  private int index;
 
   /**
-   * Constructor.
-   * @param selector to delegate to
+   * @param selector to use for selector information
    */
-  public SelectorPojo(SpecPojo spec, NestedSelector selector) {
-    setSpec(spec);
-    setDelegatee(selector);
+  public DelegatingIndexedSelector(NestedSelector selector) {
+    this(selector, 0);
+  }
+
+  /**
+   * @param selector to use for selector information
+   * @param index index for addressing specific element
+   */
+  public DelegatingIndexedSelector(NestedSelector selector, int index) {
+    setDelgatee(selector);
+    setIndex(index);
   }
 
   @Override
@@ -55,13 +61,6 @@ public class SelectorPojo implements NestedSelector {
   @Override
   public Locator asLocator() {
     return getDelegatee().asLocator();
-  }
-
-  /**
-   * @return selector relative to its parent
-   */
-  public Selector asRelative() {
-    return SelectorFactory.relativeFromAbsolute(getParent(), getDelegatee());
   }
 
   @Override
@@ -76,20 +75,17 @@ public class SelectorPojo implements NestedSelector {
 
   @Override
   public Collection<NestedSelector> getChildren() {
-    Collection<NestedSelector> children = new ArrayList<>();
-    for (NestedSelector child : getDelegatee().getChildren()) {
-      children.add(wrap(child));
-    }
-    return children;
+    return getDelegatee().getChildren();
+  }
+
+  @Override
+  public int getIndex() {
+    return index;
   }
 
   @Override
   public NestedSelector getParent() {
-    return wrap(getDelegatee().getParent());
-  }
-
-  public SpecPojo getSpec() {
-    return spec;
+    return getDelegatee().getParent();
   }
 
   @Override
@@ -106,18 +102,12 @@ public class SelectorPojo implements NestedSelector {
     return delegatee;
   }
 
-  private void setDelegatee(NestedSelector delegatee) {
-    this.delegatee = delegatee;
+  private void setDelgatee(NestedSelector delgatee) {
+    this.delegatee = delgatee;
   }
 
-  private void setSpec(SpecPojo spec) {
-    this.spec = spec;
+  protected void setIndex(int index) {
+    this.index = index;
   }
 
-  private SelectorPojo wrap(NestedSelector selector) {
-    if (selector == null) {
-      return null;
-    }
-    return new SelectorPojo(getSpec(), selector);
-  }
 }

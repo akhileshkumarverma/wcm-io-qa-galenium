@@ -17,31 +17,21 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.qa.galenium.verification.stability;
+package io.wcm.qa.galenium.selectors.impl;
 
-import org.apache.commons.lang3.StringUtils;
-
-import io.wcm.qa.galenium.sampling.element.TextSampler;
 import io.wcm.qa.galenium.selectors.Selector;
-import io.wcm.qa.galenium.verification.base.Verifiable;
-
 
 /**
- * Verifies stable text of element. Useful when waiting for animated text changes of elements to finish.
+ * Simple wrapper to represent regular selector as nested selector.
+ * No parent, no children.
  */
-public class StableText extends Stability<String> implements Verifiable {
+public class NestedSelectorWrapper extends FixedValueNestedSelector {
 
   /**
-   * Constructor.
-   * @param selector to check text of
+   * @param selector to take values from
    */
-  public StableText(Selector selector) {
-    super(new TextSampler(selector));
-  }
-
-  @Override
-  protected boolean checkForEquality(String oldValue, String newValue) {
-    return StringUtils.equals(oldValue, newValue);
+  public NestedSelectorWrapper(Selector selector) {
+    super(selector.elementName(), selector.asString(), selector.asBy(), selector.asLocator(), null, null);
   }
 
 }

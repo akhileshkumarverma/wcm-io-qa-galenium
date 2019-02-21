@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2018 wcm.io
+ * Copyright (C) 2017 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,30 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.qa.galenium.sampling.element;
+package io.wcm.qa.galenium.selectors.impl;
 
-import io.wcm.qa.galenium.interaction.Element;
-import io.wcm.qa.galenium.sampling.element.base.SelectorBasedSampler;
 import io.wcm.qa.galenium.selectors.Selector;
+import io.wcm.qa.galenium.selectors.impl.base.AbstractSelectorBase;
 
 /**
- * Counts elements matching the selector.
+ * Implementation of {@link Selector} interface.
  */
-public class ElementCountSampler extends SelectorBasedSampler<Integer> {
+public class SelectorFromString extends AbstractSelectorBase {
 
   /**
-   * @param selector identifies elements to be counted
+   * @param selectorString CSS selector
    */
-  public ElementCountSampler(Selector selector) {
-    super(selector);
+  public SelectorFromString(String selectorString) {
+    this(null, selectorString);
   }
 
-  @Override
-  public Integer sampleValue() {
-    return Element.findAll(getSelector()).size();
+  /**
+   * @param elementName name to use
+   * @param selectorString CSS selector
+   */
+  public SelectorFromString(String elementName, String selectorString) {
+    setName(elementName);
+    setString(selectorString);
   }
 
 }

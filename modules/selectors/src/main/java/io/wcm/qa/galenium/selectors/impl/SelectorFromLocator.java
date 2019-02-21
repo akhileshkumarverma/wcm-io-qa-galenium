@@ -17,24 +17,18 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.qa.galenium.selectors;
+package io.wcm.qa.galenium.selectors.impl;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.galenframework.specs.page.Locator;
 
-import io.wcm.qa.galenium.selectors.base.AbstractNestedSelectorBase;
-import io.wcm.qa.galenium.selectors.base.Selector;
+import io.wcm.qa.galenium.selectors.Selector;
 
 /**
  * Turns a Galen {@link Locator} object into a Galenium {@link Selector}.
  */
-public class SelectorFromLocator extends AbstractNestedSelectorBase {
-
-  /**
-   * @param locator to use in Selector construction
-   */
-  public SelectorFromLocator(Locator locator) {
-    this(null, locator);
-  }
+public class SelectorFromLocator extends TrueIndexedSelector {
 
   /**
    * @param elementName alternative name for use in reporting
@@ -51,11 +45,19 @@ public class SelectorFromLocator extends AbstractNestedSelectorBase {
     setString(locator.getLocatorValue());
     Locator parentLocator = locator.getParent();
     if (parentLocator != null) {
-      String parentName = getName().replaceFirst("\\.[^.]*$", "");
+      String parentName = getParentName();
       SelectorFromLocator parentSelector = new SelectorFromLocator(parentName, parentLocator);
       setParent(parentSelector);
       parentSelector.addChild(this);
     }
+  }
+
+  private String getParentName() {
+    int lastIndexOfDot = StringUtils.lastIndexOf(getName(), '.');
+    if (lastIndexOfDot > 0) {
+      return getName().substring(lastIndexOfDot + 1);
+    }
+    return "";
   }
 
 }

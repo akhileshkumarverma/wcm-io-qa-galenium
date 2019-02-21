@@ -17,27 +17,16 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.qa.galenium.sampling.element;
-
-import io.wcm.qa.galenium.interaction.Element;
-import io.wcm.qa.galenium.sampling.element.base.SelectorBasedSampler;
-import io.wcm.qa.galenium.selectors.Selector;
+package io.wcm.qa.galenium.selectors;
 
 /**
- * Counts elements matching the selector.
+ * Selector with indices to allow addressing more than one element in page.
  */
-public class ElementCountSampler extends SelectorBasedSampler<Integer> {
+public interface IndexedSelector extends NestedSelector {
 
   /**
-   * @param selector identifies elements to be counted
+   * @return index associated with this selector
    */
-  public ElementCountSampler(Selector selector) {
-    super(selector);
-  }
-
-  @Override
-  public Integer sampleValue() {
-    return Element.findAll(getSelector()).size();
-  }
+  int getIndex();
 
 }

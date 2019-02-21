@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.qa.galenium.selectors.base;
+package io.wcm.qa.galenium.selectors;
 
 import java.util.Collection;
 
@@ -26,18 +26,6 @@ import java.util.Collection;
  * CSS relative to parent.
  */
 public interface NestedSelector extends Selector {
-
-  /**
-   * Cloned selector with CSS not relative to potential parent, but as absolute in page.
-   * @return a clone relative to parent
-   */
-  Selector asAbsolute();
-
-  /**
-   * Cloned selector with CSS not relative to potential parent, but as absolute in page.
-   * @return a clone relative to parent
-   */
-  Selector asRelative();
 
   /**
    * @return a list containing this selector's child selectors, empty list if no children
